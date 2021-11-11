@@ -22,7 +22,7 @@ RUN yum install -y epel-release && \
   java-1.8.0-openjdk && \
   yum -y clean all --enablerepo='*'
 
-RUN wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
+RUN wget https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
     tar zxvf git-2.9.5.tar.gz --no-same-owner && \
     cd git-2.9.5 && \
     make configure && \
