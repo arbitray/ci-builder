@@ -35,7 +35,6 @@ RUN wget --no-check-certificate https://mirrors.kernel.org/pub/software/scm/git/
     git version
 
 
-
 # Set the locale(en_US.UTF-8)
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -93,7 +92,7 @@ RUN yum install -y java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-ope
     yum install -y java-11-openjdk-devel java-11-openjdk-devel.i686
 
 # maven
-ENV MAVEN_VERSION=3.8.2
+ENV MAVEN_VERSION=3.8.3
 RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
 ENV M2_HOME /opt/apache-maven-$MAVEN_VERSION
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSIOIN}-openjdk
