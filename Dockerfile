@@ -71,8 +71,7 @@ ENV PATH $PATH:/root/.nuget/tools:/root/.dotnet/tools:/usr/bin/sonar-scanner-3.3
 
 RUN yum -y groupinstall 'Development Tools'  && yum -y clean all --enablerepo='*'
 
-ARG GOLANG_VERSION 1.12.10
-ENV GOLANG_VERSION $GOLANG_VERSION
+ENV GOLANG_VERSION 1.12.10
 
 ENV PATH $PATH:/usr/local/go/bin
 ENV PATH $PATH:/usr/local/
@@ -88,15 +87,13 @@ RUN mkdir -p $GOPATH/bin && mkdir -p $GOPATH/src && mkdir -p $GOPATH/pkg
 #---- maven
 
 
-ARG JDK_VERSION=1.8.0
-
 # java
-ENV JAVA_VERSIOIN $JDK_VERSION
-RUN yum install -y java-${JAVA_VERSIOIN}-openjdk-devel \
-    java-${JAVA_VERSIOIN}-openjdk-devel.i686
+ENV JAVA_VERSIOIN 1.8.0
+RUN yum install -y java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 && \
+    yum install -y java-11-openjdk-devel java-11-openjdk-devel.i686
 
 # maven
-ARG MAVEN_VERSION=3.5.3
+ENV MAVEN_VERSION=3.8.2
 RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
 ENV M2_HOME /opt/apache-maven-$MAVEN_VERSION
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSIOIN}-openjdk
