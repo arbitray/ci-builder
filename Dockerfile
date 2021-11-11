@@ -22,7 +22,7 @@ RUN yum install -y epel-release && \
   java-1.8.0-openjdk && \
   yum -y clean all --enablerepo='*'
 
-RUN wget https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
+RUN wget --no-check-certificate https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
     tar zxvf git-2.9.5.tar.gz --no-same-owner && \
     cd git-2.9.5 && \
     make configure && \
@@ -112,8 +112,8 @@ ENV ANT_HOME /opt/ant
 ENV PATH ${PATH}:/opt/ant/bin
 
 # Set JDK to be 32bit
-COPY set_java $M2
-RUN $M2/set_java && rm $M2/set_java
+COPY usejava /usr/bin/
+RUN chmod +x /usr/bin/usejava && /usr/bin/usejava
 
 #---- nodejs
 
