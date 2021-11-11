@@ -55,7 +55,7 @@ RUN curl -o sonar_scanner.zip https://binaries.sonarsource.com/Distribution/sona
 ENV PATH $PATH:/usr/bin/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin
 
 COPY ./ ./
-RUN ./hack/base_install_utils.sh && rm -rf ./*
+RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
 
 #---- dotnet
 
@@ -80,7 +80,7 @@ ENV GOPATH=/home/jenkins/go
 ENV PATH $PATH:$GOPATH/bin
 
 #COPY ./ ./
-RUN ./hack/go_install_utils.sh && rm -rf ./*
+RUN ./hack/go_install_utils.sh
 
 RUN mkdir -p $GOPATH/bin && mkdir -p $GOPATH/src && mkdir -p $GOPATH/pkg
 
