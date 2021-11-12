@@ -145,7 +145,7 @@ RUN ARCH= && uArch="$(uname -m)" \
   && yum install -y nodejs GConf2 gtk2 xorg-x11-server-Xvfb \
   && yum install -y --enablerepo=epel chromedriver chromium
 
-RUN su - && npm i -g watch-cli vsce typescript
+RUN npm i -g watch-cli vsce typescript --unsafe
 
 # Yarn
 ENV YARN_VERSION 1.16.0
