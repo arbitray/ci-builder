@@ -1,6 +1,23 @@
 #!/bin/bash
 # credit https://github.com/jerboaa from https://github.com/fabric8io-images/maven-builder/blob/d81dedbc298dee7e071ac2bc1e0050ae7ee1e5aa/set_java
 
+programs="/usr/lib/jvm"
+current=$(echo $PATH|grep -Eo "${programs}/java-[0-9.]+-jdk"|sed -E 's#^.*/##g')
+jdks=$(ls "${programs}/"|tr '\r\n' ','|sed -E 's#(.*),$#\1#g')
+
+if [ $# -lt 1 ]; then
+  echo "Usage: ${0##*/} <jdk> #current=$current,available=${jdks}"
+else
+  if [ -d "${programs}/$1" ]; then
+    export PATH=${PATH//$current/$1}
+    export JAVA_HOME="${programs}/$1"
+    echo "JAVA_HOME has been changed to : ${JAVA_HOME}"
+    echo "PATH has been changed to : ${PATH}"
+  else
+    echo "Invalid JDK installation: $1"
+  fi
+fi
+
 ARCH=$(uname -m)
 echo $ARCH
 

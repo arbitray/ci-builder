@@ -98,7 +98,7 @@ ENV M2_HOME /opt/apache-maven-$MAVEN_VERSION
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSIOIN}-openjdk
 ENV maven.home $M2_HOME
 ENV M2 $M2_HOME/bin
-ENV PATH $M2:$PATH:JAVA_HOME/bin
+ENV PATH $M2:$PATH:$JAVA_HOME/bin
 
 # ant
 ENV ANT_VERSION 1.10.11
@@ -112,7 +112,7 @@ ENV PATH ${PATH}:/opt/ant/bin
 
 # Set JDK to be 32bit
 COPY usejava /usr/bin/
-RUN chmod +x /usr/bin/usejava && /usr/bin/usejava
+RUN chmod +x /usr/bin/usejava && /usr/bin/usejava java-${JAVA_VERSIOIN}-openjdk
 
 #---- nodejs
 
