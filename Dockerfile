@@ -51,7 +51,7 @@ WORKDIR /home/jenkins
 ENV SONAR_SCANNER_VERSION 3.3.0.1492
 
 RUN curl -o sonar_scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip && \
-    unzip sonar_scanner.zip && rm sonar_scanner.zip \
+    unzip -q sonar_scanner.zip && rm sonar_scanner.zip \
     && rm -rf sonar-scanner-$SONAR_SCANNER_VERSION-linux/jre && \
     sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin/sonar-scanner && \
     mv /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux /usr/bin
