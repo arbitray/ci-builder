@@ -6,7 +6,7 @@ ENV JAVA_VERSIOIN 1.8.0
 #---- base
 # utils
 RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm && \
-  sed -i /etc/yum/pluginconf.d/fastestmirror.conf "s#enabled=1#enabled=0#g" && \
+  sed -i "s#enabled=1#enabled=0#g" /etc/yum/pluginconf.d/fastestmirror.conf && \
   yum install -y unzip \
   which \
   make \
