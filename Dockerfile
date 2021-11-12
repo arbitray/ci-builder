@@ -26,7 +26,7 @@ RUN yum install -y epel-release && \
   java-11-openjdk-devel java-11-openjdk-devel.i686
 
 RUN wget --no-check-certificate https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
-    tar zxvf git-2.9.5.tar.gz --no-same-owner && \
+    tar zxf git-2.9.5.tar.gz --no-same-owner && \
     cd git-2.9.5 && \
     make configure && \
     ./configure prefix=/usr/local/git/ && \
@@ -90,7 +90,7 @@ RUN mkdir -p $GOPATH/bin && mkdir -p $GOPATH/src && mkdir -p $GOPATH/pkg
 
 # maven
 ENV MAVEN_VERSION=3.8.3
-RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
+RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xz
 ENV M2_HOME /opt/apache-maven-$MAVEN_VERSION
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSIOIN}-openjdk
 ENV maven.home $M2_HOME
@@ -99,7 +99,7 @@ ENV PATH $M2:$PATH:$JAVA_HOME/bin
 
 # ant
 ENV ANT_VERSION 1.10.11
-RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz|tar -C /opt/ -xzv && \
+RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz|tar -C /opt/ -xz && \
     mv /opt/apache-ant-${ANT_VERSION} /opt/ant
 ENV ANT_HOME /opt/ant
 ENV PATH ${PATH}:/opt/ant/bin

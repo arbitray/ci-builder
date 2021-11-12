@@ -9,12 +9,12 @@ if [[ ${EXCLUDE_DOCKER} != '1' ]]; then
   # Docker
   DOCKER_VERSION=18.09.9
   if [[ ${ARCH} == 'x86_64' ]]; then
-    curl -f -L https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_VERSION.tgz | tar xvz && \
+    curl -f -L https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_VERSION.tgz | tar xz && \
     mv docker/docker /usr/bin/ && \
     rm -rf docker
   elif [[ ${ARCH} == 'aarch64' ]]
   then
-    curl -f -L https://download.docker.com/linux/static/stable/aarch64/docker-$DOCKER_VERSION.tgz | tar xvz && \
+    curl -f -L https://download.docker.com/linux/static/stable/aarch64/docker-$DOCKER_VERSION.tgz | tar xz && \
     mv docker/docker /usr/bin/ && \
     rm -rf docker
   else
@@ -28,22 +28,22 @@ HELM_VERSION=2.11.0
 HELM3_VERSIOIN=3.5.0
 
 if [[ ${ARCH} == 'x86_64' ]]; then
-  curl -f https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz  | tar xzv && \
+  curl -f https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz  | tar xz && \
   mv linux-amd64/helm /usr/bin/ && \
   mv linux-amd64/tiller /usr/bin/ && \
   rm -rf linux-amd64
 
-  curl -f https://get.helm.sh/helm-v${HELM3_VERSIOIN}-linux-amd64.tar.gz | tar xzv && \
+  curl -f https://get.helm.sh/helm-v${HELM3_VERSIOIN}-linux-amd64.tar.gz | tar xz && \
   mv linux-amd64/helm /usr/bin/helm3 && \
   rm -rf linux-amd64 
 elif [[ ${ARCH} == 'aarch64' ]]
 then
-  curl -f https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-arm64.tar.gz  | tar xzv && \
+  curl -f https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-arm64.tar.gz  | tar xz && \
   mv linux-arm64/helm /usr/bin/ && \
   mv linux-arm64/tiller /usr/bin/ && \
   rm -rf linux-arm64
 
-  curl -f https://get.helm.sh/helm-v${HELM3_VERSIOIN}-linux-arm64.tar.gz | tar xzv && \
+  curl -f https://get.helm.sh/helm-v${HELM3_VERSIOIN}-linux-arm64.tar.gz | tar xz && \
   mv linux-arm64/helm /usr/bin/helm3 && \
   rm -rf linux-arm64 
 else
