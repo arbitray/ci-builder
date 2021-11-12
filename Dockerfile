@@ -174,5 +174,6 @@ RUN yum -y install bzip2-devel libffi-devel libsqlite3x-devel && \
   sed -e 's|^#!/usr/bin/python|#!/usr/bin/python2.7|g' -i.bak /usr/bin/yum && \
   sed -e 's|^#! /usr/bin/python|#! /usr/bin/python2.7|g' -i.bak /usr/libexec/urlgrabber-ext-down && \
   yum -y remove bzip2-devel libffi-devel libsqlite3x-devel && \
-  yum -y clean all
+  yum -y clean all && \
+  rm /home/jenkins/* -rvf
 
