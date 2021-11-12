@@ -6,43 +6,43 @@ ENV JAVA_VERSIOIN 1.8.0
 #---- base
 # utils
 RUN sed -i "s#enabled=1#enabled=0#g" /etc/yum/pluginconf.d/fastestmirror.conf && \
-    yum install -y epel-release && \
-    yum install -y unzip \
-    which \
-    make \
-    wget \
-    zip \
-    bzip2 \
-    gcc \
-    gcc-c++ \
-    curl-devel \
-    autoconf \
-    expat-devel \
-    gettext-devel \
-    openssl-devel \
-    perl-devel \
-    zlib-devel \
-    python-pip \
-    java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 \
-    java-11-openjdk-devel java-11-openjdk-devel.i686
+  yum install -y epel-release && \
+  yum install -y unzip \
+  which \
+  make \
+  wget \
+  zip \
+  bzip2 \
+  gcc \
+  gcc-c++ \
+  curl-devel \
+  autoconf \
+  expat-devel \
+  gettext-devel \
+  openssl-devel \
+  perl-devel \
+  zlib-devel \
+  python-pip \
+  java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 \
+  java-11-openjdk-devel java-11-openjdk-devel.i686
 
 RUN curl -f -L -skS https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz|tar zx --no-same-owner && \
-    cd git-2.9.5 && \
-    make configure && \
-    ./configure prefix=/usr/local/git/ && \
-    make && \
-    make install && \
-    mv /usr/local/git/bin/git /usr/bin/ && \
-    cd ..&& \
-    rm -rf git-2.9.5 && \
-    git version
-
+  cd git-2.9.5 && \
+  make configure && \
+  ./configure prefix=/usr/local/git/ && \
+  make && \
+  make install && \
+  mv /usr/local/git/bin/git /usr/bin/ && \
+  cd ..&& \
+  rm -rf git-2.9.5 && \
+  git version
 
 # Set the locale(en_US.UTF-8)
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
+RUN useradd -M jenkins
 # USER jenkins
 WORKDIR /home/jenkins
 
@@ -100,7 +100,7 @@ ENV PATH $M2:$PATH:$JAVA_HOME/bin
 # ant
 ENV ANT_VERSION 1.10.11
 RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz|tar -C /opt/ -xz && \
-    mv /opt/apache-ant-${ANT_VERSION} /opt/ant
+  mv /opt/apache-ant-${ANT_VERSION} /opt/ant
 ENV ANT_HOME /opt/ant
 ENV PATH ${PATH}:/opt/ant/bin
 
@@ -145,7 +145,7 @@ RUN ARCH= && uArch="$(uname -m)" \
   && yum install -y nodejs GConf2 gtk2 xorg-x11-server-Xvfb \
   && yum install -y --enablerepo=epel chromedriver chromium
 
-RUN npm i -g watch-cli vsce typescript
+RUN su - && npm i -g watch-cli vsce typescript
 
 # Yarn
 ENV YARN_VERSION 1.16.0
@@ -160,19 +160,19 @@ RUN curl -f -L -o /tmp/yarn.tgz https://github.com/yarnpkg/yarn/releases/downloa
 # python3
 ENV PYTHON_VERSION=3.7.11
 RUN yum -y install bzip2-devel libffi-devel libsqlite3x-devel && \
-    curl -fSL https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz -o /usr/src/Python-${PYTHON_VERSION}.tgz && \
-    tar xzf /usr/src/Python-${PYTHON_VERSION}.tgz -C /usr/src/ --no-same-owner && \
-    cd /usr/src/Python-${PYTHON_VERSION} && \
-    ./configure --enable-optimizations --with-ensurepip=install --enable-loadable-sqlite-extensions && \
-    make altinstall -j 2 && \
-    cd ../ && \
-    rm -rf /usr/src/Python-${PYTHON_VERSION}.tgz /usr/src/Python-${PYTHON_VERSION} && \
-    ln -fs /usr/local/bin/python3.7 /usr/bin/python && \
-    ln -fs /usr/local/bin/python3.7 /usr/bin/python3 && \
-    ln -fs /usr/local/bin/pip3.7 /usr/bin/pip && \
-    python3 -m pip install --upgrade pip && \
-    sed -e 's|^#!/usr/bin/python|#!/usr/bin/python2.7|g' -i.bak /usr/bin/yum && \
-    sed -e 's|^#! /usr/bin/python|#! /usr/bin/python2.7|g' -i.bak /usr/libexec/urlgrabber-ext-down && \
-    yum -y remove bzip2-devel libffi-devel libsqlite3x-devel && \
-    yum -y clean all
+  curl -fSL https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz -o /usr/src/Python-${PYTHON_VERSION}.tgz && \
+  tar xzf /usr/src/Python-${PYTHON_VERSION}.tgz -C /usr/src/ --no-same-owner && \
+  cd /usr/src/Python-${PYTHON_VERSION} && \
+  ./configure --enable-optimizations --with-ensurepip=install --enable-loadable-sqlite-extensions && \
+  make altinstall -j 2 && \
+  cd ../ && \
+  rm -rf /usr/src/Python-${PYTHON_VERSION}.tgz /usr/src/Python-${PYTHON_VERSION} && \
+  ln -fs /usr/local/bin/python3.7 /usr/bin/python && \
+  ln -fs /usr/local/bin/python3.7 /usr/bin/python3 && \
+  ln -fs /usr/local/bin/pip3.7 /usr/bin/pip && \
+  python3 -m pip install --upgrade pip && \
+  sed -e 's|^#!/usr/bin/python|#!/usr/bin/python2.7|g' -i.bak /usr/bin/yum && \
+  sed -e 's|^#! /usr/bin/python|#! /usr/bin/python2.7|g' -i.bak /usr/libexec/urlgrabber-ext-down && \
+  yum -y remove bzip2-devel libffi-devel libsqlite3x-devel && \
+  yum -y clean all
 
