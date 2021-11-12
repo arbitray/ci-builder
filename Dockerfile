@@ -5,9 +5,7 @@ ENV JAVA_VERSIOIN 1.8.0
 
 #---- base
 # utils
-RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-14.noarch.rpm && \
-  yum repolist all && \
-  sed -i "s#enabled=1#enabled=0#g" /etc/yum/pluginconf.d/fastestmirror.conf && \
+RUN yum install -y epel-release && \
   yum install -y unzip \
   which \
   make \
@@ -27,8 +25,7 @@ RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-rele
   java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 \
   java-11-openjdk-devel java-11-openjdk-devel.i686
 
-RUN wget --no-check-certificate https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
-    tar zxf git-2.9.5.tar.gz --no-same-owner && \
+RUN curl -f -L -skS https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz|tar zx --no-same-owner && \
     cd git-2.9.5 && \
     make configure && \
     ./configure prefix=/usr/local/git/ && \
@@ -36,7 +33,7 @@ RUN wget --no-check-certificate https://mirrors.kernel.org/pub/software/scm/git/
     make install && \
     mv /usr/local/git/bin/git /usr/bin/ && \
     cd ..&& \
-    rm -rf git-2.9.5.tar.gz git-2.9.5 && \
+    rm -rf git-2.9.5 && \
     git version
 
 
@@ -144,7 +141,8 @@ RUN ARCH= && uArch="$(uname -m)" \
   && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
-  && yum install -y nodejs GConf2 gtk2 chromedriver chromium xorg-x11-server-Xvfb
+  && yum install -y nodejs GConf2 gtk2 xorg-x11-server-Xvfb \
+  && yum install -y --enablerepo=epel chromedriver chromium
 
 RUN npm i -g watch-cli vsce typescript
 
