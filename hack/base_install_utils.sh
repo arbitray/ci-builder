@@ -28,7 +28,7 @@ HELM_VERSION=2.11.0
 HELM3_VERSIOIN=3.5.0
 
 if [[ ${ARCH} == 'x86_64' ]]; then
-  curl -f https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz  | tar xz && \
+  curl -f https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz  | tar xz && \
   mv linux-amd64/helm /usr/bin/ && \
   mv linux-amd64/tiller /usr/bin/ && \
   rm -rf linux-amd64
@@ -38,7 +38,7 @@ if [[ ${ARCH} == 'x86_64' ]]; then
   rm -rf linux-amd64 
 elif [[ ${ARCH} == 'aarch64' ]]
 then
-  curl -f https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-arm64.tar.gz  | tar xz && \
+  curl -f https://get.helm.sh/helm-v${HELM_VERSION}-linux-arm64.tar.gz  | tar xz && \
   mv linux-arm64/helm /usr/bin/ && \
   mv linux-arm64/tiller /usr/bin/ && \
   rm -rf linux-arm64
