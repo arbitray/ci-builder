@@ -1,5 +1,10 @@
 FROM centos:7
 
+# java
+ENV JAVA_VERSIOIN 1.8.0
+RUN yum install -y java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 && \
+    yum install -y java-11-openjdk-devel java-11-openjdk-devel.i686
+
 #---- base
 # utils
 RUN yum install -y epel-release && \
@@ -19,7 +24,6 @@ RUN yum install -y epel-release && \
   perl-devel \
   zlib-devel \
   python-pip \
-  java-1.8.0-openjdk && \
   yum -y clean all --enablerepo='*'
 
 RUN wget --no-check-certificate https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
@@ -85,12 +89,6 @@ RUN mkdir -p $GOPATH/bin && mkdir -p $GOPATH/src && mkdir -p $GOPATH/pkg
 
 #---- maven
 
-
-# java
-ENV JAVA_VERSIOIN 1.8.0
-RUN yum install -y java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 && \
-    yum install -y java-11-openjdk-devel java-11-openjdk-devel.i686
-
 # maven
 ENV MAVEN_VERSION=3.8.3
 RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xzv
@@ -102,11 +100,8 @@ ENV PATH $M2:$PATH:$JAVA_HOME/bin
 
 # ant
 ENV ANT_VERSION 1.10.11
-RUN cd && \
-    wget -q https://mirrors.bfsu.edu.cn/apache/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz && \
-    tar -xzf apache-ant-${ANT_VERSION}-bin.tar.gz && \
-    mv apache-ant-${ANT_VERSION} /opt/ant && \
-    rm apache-ant-${ANT_VERSION}-bin.tar.gz
+RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz|tar -C /opt/ -xzv && \
+    mv apache-ant-${ANT_VERSION} /opt/ant
 ENV ANT_HOME /opt/ant
 ENV PATH ${PATH}:/opt/ant/bin
 
@@ -148,7 +143,7 @@ RUN ARCH= && uArch="$(uname -m)" \
   && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
-  && yum install -y nodejs gcc-c++ make bzip2 GConf2 gtk2 chromedriver chromium xorg-x11-server-Xvfb
+  && yum install -y nodejs GConf2 gtk2 chromedriver chromium xorg-x11-server-Xvfb
 
 RUN npm i -g watch-cli vsce typescript
 
