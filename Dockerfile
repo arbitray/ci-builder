@@ -23,8 +23,7 @@ RUN yum install -y epel-release && \
   zlib-devel \
   python-pip \
   java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 \
-  java-11-openjdk-devel java-11-openjdk-devel.i686 \
-  yum -y clean all --enablerepo='*'
+  java-11-openjdk-devel java-11-openjdk-devel.i686
 
 RUN wget --no-check-certificate https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz && \
     tar zxvf git-2.9.5.tar.gz --no-same-owner && \
