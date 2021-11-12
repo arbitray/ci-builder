@@ -5,7 +5,7 @@ ENV JAVA_VERSIOIN 1.8.0
 
 #---- base
 # utils
-RUN yum install -y epel-release && \
+RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm && \
   yum install -y unzip \
   which \
   make \
