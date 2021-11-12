@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 
 ARCH=$(uname -m)
 
@@ -8,12 +9,12 @@ if [[ ${EXCLUDE_DOCKER} != '1' ]]; then
   # Docker
   DOCKER_VERSION=18.09.9
   if [[ ${ARCH} == 'x86_64' ]]; then
-    curl -f https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_VERSION.tgz | tar xvz && \
+    curl -f -L https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_VERSION.tgz | tar xvz && \
     mv docker/docker /usr/bin/ && \
     rm -rf docker
   elif [[ ${ARCH} == 'aarch64' ]]
   then
-    curl -f https://download.docker.com/linux/static/stable/aarch64/docker-$DOCKER_VERSION.tgz | tar xvz && \
+    curl -f -L https://download.docker.com/linux/static/stable/aarch64/docker-$DOCKER_VERSION.tgz | tar xvz && \
     mv docker/docker /usr/bin/ && \
     rm -rf docker
   else
