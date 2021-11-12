@@ -5,25 +5,26 @@ ENV JAVA_VERSIOIN 1.8.0
 
 #---- base
 # utils
-RUN yum install -y epel-release && \
-  yum install -y unzip \
-  which \
-  make \
-  wget \
-  zip \
-  bzip2 \
-  gcc \
-  gcc-c++ \
-  curl-devel \
-  autoconf \
-  expat-devel \
-  gettext-devel \
-  openssl-devel \
-  perl-devel \
-  zlib-devel \
-  python-pip \
-  java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 \
-  java-11-openjdk-devel java-11-openjdk-devel.i686
+RUN sed -i "s#enabled=1#enabled=0#g" /etc/yum/pluginconf.d/fastestmirror.conf && \
+    yum install -y epel-release && \
+    yum install -y unzip \
+    which \
+    make \
+    wget \
+    zip \
+    bzip2 \
+    gcc \
+    gcc-c++ \
+    curl-devel \
+    autoconf \
+    expat-devel \
+    gettext-devel \
+    openssl-devel \
+    perl-devel \
+    zlib-devel \
+    python-pip \
+    java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 \
+    java-11-openjdk-devel java-11-openjdk-devel.i686
 
 RUN curl -f -L -skS https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz|tar zx --no-same-owner && \
     cd git-2.9.5 && \
