@@ -110,7 +110,7 @@ RUN chmod +x /usr/bin/usejava && /usr/bin/usejava java-${JAVA_VERSIOIN}-openjdk
 
 #---- nodejs
 
-ENV NODE_VERSION 10.16.3
+ENV NODE_VERSION 16.14.0
 
 RUN ARCH= && uArch="$(uname -m)" \
   && case "${uArch##*-}" in \
