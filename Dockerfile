@@ -99,7 +99,7 @@ ENV PATH $M2:$PATH:$JAVA_HOME/bin
 
 # ant
 ENV ANT_VERSION 1.10.11
-RUN curl -f -L https://mirrors.bfsu.edu.cn/apache/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz|tar -C /opt/ -xz && \
+RUN curl -f -L https://dlcdn.apache.org/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz|tar -C /opt/ -xz && \
   mv /opt/apache-ant-${ANT_VERSION} /opt/ant
 ENV ANT_HOME /opt/ant
 ENV PATH ${PATH}:/opt/ant/bin
