@@ -135,7 +135,7 @@ RUN ARCH= && uArch="$(uname -m)" \
   ; do \
     gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
   done \
-  && yum install -y nodejs-${NODE_VERSION}-2.el7.x86_64 GConf2 gtk2 xorg-x11-server-Xvfb \
+  && yum install -y nodejs-${NODE_VERSION}-2.el7.x86_64 npm-8.3.1-1.${NODE_VERSION}.2.el7.x86_64 GConf2 gtk2 xorg-x11-server-Xvfb \
   && yum install -y --enablerepo=epel chromedriver chromium \
   && npm i -g watch-cli vsce typescript --unsafe || echo "WARN: unable to install node modules ... " 1>&2
 
