@@ -136,9 +136,8 @@ RUN ARCH= && uArch="$(uname -m)" \
     gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
   done \
   && yum install -y nodejs-${NODE_VERSION}-2.el7.x86_64 GConf2 gtk2 xorg-x11-server-Xvfb \
-  && yum install -y --enablerepo=epel chromedriver chromium
-
-RUN npm i -g watch-cli vsce typescript --unsafe
+  && yum install -y --enablerepo=epel chromedriver chromium \
+  && npm i -g watch-cli vsce typescript --unsafe
 
 # Yarn
 ENV YARN_VERSION 1.16.0
