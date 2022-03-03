@@ -135,14 +135,7 @@ RUN ARCH= && uArch="$(uname -m)" \
   ; do \
     gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
   done \
-  && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
-  && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-  && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-  && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-  && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
-  && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-  && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
-  && yum install -y nodejs GConf2 gtk2 xorg-x11-server-Xvfb \
+  && yum install -y nodejs-${NODE_VERSION}-2.el7.x86_64 GConf2 gtk2 xorg-x11-server-Xvfb \
   && yum install -y --enablerepo=epel chromedriver chromium
 
 RUN npm i -g watch-cli vsce typescript --unsafe
