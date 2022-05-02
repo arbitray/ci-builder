@@ -45,7 +45,7 @@ RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
 
 #---- dotnet
 RUN curl -vskS https://dot.net/v1/dotnet-install.sh > /root/dotnet-install.sh && chmod +x /root/dotnet-install.sh
-RUN bash --verbose /root/dotnet-install.sh -c 5.0 
+RUN bash --verbose /root/dotnet-install.sh -c 5.0
 RUN bash --verbose /root/dotnet-install.sh -c 3.1
 ENV PATH $PATH:/root/.nuget/tools:/root/.dotnet/tools:/usr/bin/sonar-scanner-3.3.0.1492-linux/bin
 
@@ -112,7 +112,9 @@ RUN ARCH= && uArch="$(uname -m)" && apk add --no-cache gpg gnupg-dirmngr gpg-age
   ; do \
     gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
   done \
-  && apk add --no-cache nodejs=$NODE_VERSION npm gtk+2.0 \
+  && apk add --no-cache nodejs \
+  && apk add --no-cache npm \
+  && apk add --no-cache gtk+2.0 \
   && apk add --no-cache chromium-chromedriver chromium \
   && npm i -g watch-cli vsce typescript node-gyp --unsafe || echo "WARN: unable to install node modules ... " 1>&2
 
@@ -138,4 +140,3 @@ RUN apk add --no-cache bzip2-dev libffi-dev sqlite-libs && \
   ln -fs /usr/local/bin/pip3.7 /usr/bin/pip && \
   python3 -m pip install --upgrade pip && \
   rm /home/jenkins/* -rvf
-
