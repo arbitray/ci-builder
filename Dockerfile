@@ -1,80 +1,57 @@
-FROM centos:7
+FROM alpine:edge
 
 # java
 ENV JAVA_VERSIOIN 1.8.0
 
 #---- base
 # utils
-RUN sed -i "s#enabled=1#enabled=0#g" /etc/yum/pluginconf.d/fastestmirror.conf && \
-  yum install -y epel-release && \
-  yum install -y unzip \
+RUN apk update --no-cache && \
+  apk add --no-cache unzip \
+  bash \
   which \
   make \
   wget \
   zip \
   bzip2 \
   gcc \
-  gcc-c++ \
-  curl-devel \
+  g++ \
+  curl curl-dev \
   autoconf \
-  expat-devel \
-  gettext-devel \
-  openssl-devel \
-  perl-devel \
-  zlib-devel \
-  python-pip \
-  java-${JAVA_VERSIOIN}-openjdk-devel java-${JAVA_VERSIOIN}-openjdk-devel.i686 \
-  java-11-openjdk-devel java-11-openjdk-devel.i686
-
-RUN curl -f -L -skS https://mirrors.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz|tar zx --no-same-owner && \
-  cd git-2.9.5 && \
-  make configure && \
-  ./configure prefix=/usr/local/git/ && \
-  make && \
-  make install && \
-  mv /usr/local/git/bin/git /usr/bin/ && \
-  cd ..&& \
-  rm -rf git-2.9.5 && \
-  git version
+  expat-dev \
+  gettext-dev \
+  openssl-dev \
+  perl-dev \
+  zlib-dev \
+  openjdk8 openjdk11-jdk \
+  git
 
 # Set the locale(en_US.UTF-8)
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-RUN useradd -M jenkins
+RUN mkdir /home/jenkins
 # USER jenkins
 WORKDIR /home/jenkins
-
 ENV SONAR_SCANNER_VERSION 3.3.0.1492
-
 RUN curl -o sonar_scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip && \
     unzip -q sonar_scanner.zip && rm sonar_scanner.zip \
     && rm -rf sonar-scanner-$SONAR_SCANNER_VERSION-linux/jre && \
     sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin/sonar-scanner && \
     mv /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux /usr/bin
-
 ENV PATH $PATH:/usr/bin/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin
-
 COPY ./ ./
 RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
 
 #---- dotnet
-
-RUN rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
-
-RUN yum install -y dotnet-sdk-5.0 dotnet-sdk-3.1
-
-RUN dotnet tool install --global dotnet-sonarscanner
-
+RUN curl -vskS https://dot.net/v1/dotnet-install.sh > /root/dotnet-install.sh && chmod +x /root/dotnet-install.sh
+RUN bash --verbose /root/dotnet-install.sh -c 5.0
+RUN bash --verbose /root/dotnet-install.sh -c 3.1
 ENV PATH $PATH:/root/.nuget/tools:/root/.dotnet/tools:/usr/bin/sonar-scanner-3.3.0.1492-linux/bin
 
 #---- go
-
-RUN yum -y groupinstall 'Development Tools'  && yum -y clean all --enablerepo='*'
-
-ENV GOLANG_VERSION 1.12.10
-
+RUN apk add --no-cache go
+ENV GOLANG_VERSION 1.17.9
 ENV PATH $PATH:/usr/local/go/bin
 ENV PATH $PATH:/usr/local/
 ENV GOROOT /usr/local/go
@@ -110,9 +87,9 @@ RUN chmod +x /usr/bin/usejava && /usr/bin/usejava java-${JAVA_VERSIOIN}-openjdk
 
 #---- nodejs
 
-ENV NODE_VERSION 16.14.1
+ENV NODE_VERSION 16.14.2-r0
 
-RUN ARCH= && uArch="$(uname -m)" \
+RUN ARCH= && uArch="$(uname -m)" && apk add --no-cache gpg gnupg-dirmngr gpg-agent \
   && case "${uArch##*-}" in \
     x86_64) ARCH='x64';; \
     aarch64) ARCH='arm64';; \
@@ -135,25 +112,22 @@ RUN ARCH= && uArch="$(uname -m)" \
   ; do \
     gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
   done \
-  && yum install -y nodejs-${NODE_VERSION}-2.el7.x86_64 npm-8.5.0-1.${NODE_VERSION}.1.el7.x86_64 GConf2 gtk2 xorg-x11-server-Xvfb \
-  && yum install -y --enablerepo=epel chromedriver chromium \
+  && apk add --no-cache nodejs=$NODE_VERSION npm gtk+2.0 \
+  && apk add --no-cache chromium-chromedriver chromium \
   && npm i -g watch-cli vsce typescript node-gyp --unsafe || echo "WARN: unable to install node modules ... " 1>&2
 
 # Yarn
-ENV YARN_VERSION 1.16.0
-RUN curl -f -L -o /tmp/yarn.tgz https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz && \
-	tar xf /tmp/yarn.tgz && \
-	mv yarn-v${YARN_VERSION} /opt/yarn && \
-	ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn && \
-	yarn config set cache-folder /root/.yarn
+ENV YARN_VERSION 1.22.17-r0
+RUN apk add --no-cache yarn && yarn config set cache-folder /root/.yarn
 
 #---- python
 
 # python3
 ENV PYTHON_VERSION=3.7.11
-RUN yum -y install bzip2-devel libffi-devel libsqlite3x-devel && \
-  curl -fSL https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz -o /usr/src/Python-${PYTHON_VERSION}.tgz && \
-  tar xzf /usr/src/Python-${PYTHON_VERSION}.tgz -C /usr/src/ --no-same-owner && \
+RUN apk add --no-cache bzip2-dev libffi-dev sqlite-libs && \
+  wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
+  mkdir -p /usr/src && \
+  tar xvzf Python-${PYTHON_VERSION}.tgz -C /usr/src/ --no-same-owner && \
   cd /usr/src/Python-${PYTHON_VERSION} && \
   ./configure --enable-optimizations --with-ensurepip=install --enable-loadable-sqlite-extensions && \
   make altinstall -j 2 && \
@@ -163,9 +137,4 @@ RUN yum -y install bzip2-devel libffi-devel libsqlite3x-devel && \
   ln -fs /usr/local/bin/python3.7 /usr/bin/python3 && \
   ln -fs /usr/local/bin/pip3.7 /usr/bin/pip && \
   python3 -m pip install --upgrade pip && \
-  sed -e 's|^#!/usr/bin/python|#!/usr/bin/python2.7|g' -i.bak /usr/bin/yum && \
-  sed -e 's|^#! /usr/bin/python|#! /usr/bin/python2.7|g' -i.bak /usr/libexec/urlgrabber-ext-down && \
-  yum -y remove bzip2-devel libffi-devel libsqlite3x-devel && \
-  yum -y clean all && \
   rm /home/jenkins/* -rvf
-
