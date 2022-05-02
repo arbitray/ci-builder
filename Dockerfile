@@ -98,7 +98,7 @@ ENV M2 $M2_HOME/bin
 ENV PATH $M2:$PATH:$JAVA_HOME/bin
 
 # ant
-ENV ANT_VERSION 1.10.11
+ENV ANT_VERSION 1.10.12
 RUN curl -f -L https://dlcdn.apache.org/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz|tar -C /opt/ -xz && \
   mv /opt/apache-ant-${ANT_VERSION} /opt/ant
 ENV ANT_HOME /opt/ant
@@ -110,7 +110,7 @@ RUN chmod +x /usr/bin/usejava && /usr/bin/usejava java-${JAVA_VERSIOIN}-openjdk
 
 #---- nodejs
 
-ENV NODE_VERSION 16.14.0
+ENV NODE_VERSION 16.14.1
 
 RUN ARCH= && uArch="$(uname -m)" \
   && case "${uArch##*-}" in \
@@ -135,7 +135,7 @@ RUN ARCH= && uArch="$(uname -m)" \
   ; do \
     gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
   done \
-  && yum install -y nodejs-${NODE_VERSION}-2.el7.x86_64 npm-8.3.1-1.${NODE_VERSION}.2.el7.x86_64 GConf2 gtk2 xorg-x11-server-Xvfb \
+  && yum install -y nodejs-${NODE_VERSION}-2.el7.x86_64 npm-8.5.0-1.${NODE_VERSION}.1.el7.x86_64 GConf2 gtk2 xorg-x11-server-Xvfb \
   && yum install -y --enablerepo=epel chromedriver chromium \
   && npm i -g watch-cli vsce typescript node-gyp --unsafe || echo "WARN: unable to install node modules ... " 1>&2
 
