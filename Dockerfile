@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.15
 
 # java
 ENV JAVA_VERSIOIN 1.8.0
@@ -116,7 +116,7 @@ RUN ARCH= && uArch="$(uname -m)" && apk add --no-cache gpg gnupg-dirmngr gpg-age
   && apk add --no-cache npm \
   && apk add --no-cache gtk+2.0 \
   && apk add --no-cache chromium-chromedriver chromium \
-  && npm i -g watch-cli vsce typescript node-gyp --unsafe || echo "WARN: unable to install node modules ... " 1>&2
+  && npm i -g watch-cli vsce typescript --unsafe
 
 # Yarn
 ENV YARN_VERSION 1.22.17-r0
