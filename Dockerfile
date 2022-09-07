@@ -23,7 +23,8 @@ RUN apk update --no-cache && \
   perl-dev \
   zlib-dev \
   openjdk8 openjdk11-jdk \
-  git
+  git \
+  gcompat
 
 # Set the locale(en_US.UTF-8)
 ENV LANG en_US.UTF-8
