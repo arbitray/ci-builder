@@ -24,7 +24,8 @@ RUN apk update --no-cache && \
   gcompat \
   yq \
   jq \
-  go
+  go \
+  docker
 
 
 # Set the locale(en_US.UTF-8)
