@@ -45,7 +45,7 @@ WORKDIR /home/jenkins
 #     mv /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux /usr/bin
 # ENV PATH $PATH:/usr/bin/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin
 # COPY ./ ./
-# RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
+RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
 
 #---- dotnet
 # RUN curl -vskS https://dot.net/v1/dotnet-install.sh > /root/dotnet-install.sh && chmod +x /root/dotnet-install.sh
