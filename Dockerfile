@@ -44,7 +44,7 @@ WORKDIR /home/jenkins
 #     sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin/sonar-scanner && \
 #     mv /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux /usr/bin
 # ENV PATH $PATH:/usr/bin/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin
-# COPY ./ ./
+COPY ./ ./
 RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
 
 #---- dotnet
