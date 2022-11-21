@@ -1,7 +1,4 @@
-FROM alpine:3.15
-
-# java
-ENV JAVA_VERSIOIN 1.8.0
+FROM alpine:3.16
 
 #---- base
 # utils
@@ -24,50 +21,55 @@ RUN apk update --no-cache && \
   zlib-dev \
   openjdk8 openjdk11-jdk \
   git \
-  gcompat
+  gcompat \
+  yq \
+  jq \
+  go
+
 
 # Set the locale(en_US.UTF-8)
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
+#---- jenkins
 RUN mkdir /home/jenkins
-# USER jenkins
+# # USER jenkins
 WORKDIR /home/jenkins
-ENV SONAR_SCANNER_VERSION 3.3.0.1492
-RUN curl -o sonar_scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip && \
-    unzip -q sonar_scanner.zip && rm sonar_scanner.zip \
-    && rm -rf sonar-scanner-$SONAR_SCANNER_VERSION-linux/jre && \
-    sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin/sonar-scanner && \
-    mv /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux /usr/bin
-ENV PATH $PATH:/usr/bin/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin
-COPY ./ ./
-RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
+# ENV SONAR_SCANNER_VERSION 3.3.0.1492
+# RUN curl -o sonar_scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VERSION}-linux.zip && \
+#     unzip -q sonar_scanner.zip && rm sonar_scanner.zip \
+#     && rm -rf sonar-scanner-$SONAR_SCANNER_VERSION-linux/jre && \
+#     sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin/sonar-scanner && \
+#     mv /home/jenkins/sonar-scanner-$SONAR_SCANNER_VERSION-linux /usr/bin
+# ENV PATH $PATH:/usr/bin/sonar-scanner-$SONAR_SCANNER_VERSION-linux/bin
+# COPY ./ ./
+# RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
 
 #---- dotnet
-RUN curl -vskS https://dot.net/v1/dotnet-install.sh > /root/dotnet-install.sh && chmod +x /root/dotnet-install.sh
-RUN bash --verbose /root/dotnet-install.sh -c 5.0
-RUN bash --verbose /root/dotnet-install.sh -c 3.1
-ENV PATH $PATH:/root/.nuget/tools:/root/.dotnet/tools:/usr/bin/sonar-scanner-3.3.0.1492-linux/bin
+# RUN curl -vskS https://dot.net/v1/dotnet-install.sh > /root/dotnet-install.sh && chmod +x /root/dotnet-install.sh
+# RUN bash --verbose /root/dotnet-install.sh -c 5.0
+# RUN bash --verbose /root/dotnet-install.sh -c 3.1
+# ENV PATH $PATH:/root/.nuget/tools:/root/.dotnet/tools:/usr/bin/sonar-scanner-3.3.0.1492-linux/bin
 
 #---- go
 RUN apk add --no-cache go
-ENV GOLANG_VERSION 1.17.9
+ENV GOLANG_VERSION 1.18.7
 ENV PATH $PATH:/usr/local/go/bin
 ENV PATH $PATH:/usr/local/
 ENV GOROOT /usr/local/go
 ENV GOPATH=/home/jenkins/go
 ENV PATH $PATH:$GOPATH/bin
-
-#COPY ./ ./
-RUN ./hack/go_install_utils.sh
-
+COPY ./ ./
+# RUN ./hack/go_install_utils.sh
 RUN mkdir -p $GOPATH/bin && mkdir -p $GOPATH/src && mkdir -p $GOPATH/pkg
 
 #---- maven
 
+# java
+ENV JAVA_VERSIOIN 1.8.0
 # maven
-ENV MAVEN_VERSION=3.8.5
+ENV MAVEN_VERSION=3.8.6
 RUN curl -f -L https://dlcdn.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xz
 ENV M2_HOME /opt/apache-maven-$MAVEN_VERSION
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSIOIN}-openjdk
@@ -87,7 +89,6 @@ COPY usejava /usr/bin/
 RUN chmod +x /usr/bin/usejava && /usr/bin/usejava java-${JAVA_VERSIOIN}-openjdk
 
 #---- nodejs
-
 ENV NODE_VERSION 16.14.2-r0
 
 RUN ARCH= && uArch="$(uname -m)" && apk add --no-cache gpg gnupg-dirmngr gpg-agent \
@@ -124,7 +125,6 @@ ENV YARN_VERSION 1.22.17-r0
 RUN apk add --no-cache yarn && yarn config set cache-folder /root/.yarn
 
 #---- python
-
 # python3
 ENV PYTHON_VERSION=3.7.11
 RUN apk add --no-cache bzip2-dev libffi-dev sqlite-libs && \
@@ -139,5 +139,4 @@ RUN apk add --no-cache bzip2-dev libffi-dev sqlite-libs && \
   ln -fs /usr/local/bin/python3.7 /usr/bin/python && \
   ln -fs /usr/local/bin/python3.7 /usr/bin/python3 && \
   ln -fs /usr/local/bin/pip3.7 /usr/bin/pip && \
-  python3 -m pip install --upgrade pip && \
-  rm /home/jenkins/* -rvf
+  python3 -m pip install --upgrade pip
