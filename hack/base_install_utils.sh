@@ -7,7 +7,7 @@ echo $ARCH
 
 if [[ ${EXCLUDE_DOCKER} != '1' ]]; then
   # Docker
-  DOCKER_VERSION=18.09.9
+  DOCKER_VERSION=20.10.21
   if [[ ${ARCH} == 'x86_64' ]]; then
     curl -f -L https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_VERSION.tgz | tar xz && \
     mv docker/docker /usr/bin/ && \
@@ -25,7 +25,7 @@ fi
 
 # Helm
 HELM_VERSION=2.11.0
-HELM3_VERSIOIN=3.5.0
+HELM3_VERSIOIN=3.10.2
 
 if [[ ${ARCH} == 'x86_64' ]]; then
   curl -f https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz  | tar xz && \
@@ -35,7 +35,7 @@ if [[ ${ARCH} == 'x86_64' ]]; then
 
   curl -f https://get.helm.sh/helm-v${HELM3_VERSIOIN}-linux-amd64.tar.gz | tar xz && \
   mv linux-amd64/helm /usr/bin/helm3 && \
-  rm -rf linux-amd64 
+  rm -rf linux-amd64
 elif [[ ${ARCH} == 'aarch64' ]]
 then
   curl -f https://get.helm.sh/helm-v${HELM_VERSION}-linux-arm64.tar.gz  | tar xz && \
@@ -45,7 +45,7 @@ then
 
   curl -f https://get.helm.sh/helm-v${HELM3_VERSIOIN}-linux-arm64.tar.gz | tar xz && \
   mv linux-arm64/helm /usr/bin/helm3 && \
-  rm -rf linux-arm64 
+  rm -rf linux-arm64
 else
   echo "do not support this arch"
   exit 1
