@@ -1,31 +1,13 @@
-FROM alpine:3.16
+FROM ubuntu:22.10
 
 #---- base
 # utils
-RUN apk update --no-cache && \
-  apk add --no-cache unzip \
-  bash \
-  which \
-  make \
-  wget \
-  zip \
-  bzip2 \
-  gcc \
-  g++ \
-  curl curl-dev \
-  autoconf \
-  expat-dev \
-  gettext-dev \
-  openssl-dev \
-  perl-dev \
-  zlib-dev \
-  openjdk8 openjdk11-jdk \
-  git \
-  gcompat \
-  yq \
-  jq \
-  go
+RUN apt update && \
+  apt install -y --no-install-recommends \
+    unzip bash which make wget zip bzip2 gcc g++ curl libcurl4-gnutls-dev autoconf libexpat1-dev openssl perl zip openjdk-8-jdk openjdk-11-jdk git jq
 
+RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && \
+    chmod +x /usr/bin/yq
 
 # Set the locale(en_US.UTF-8)
 ENV LANG en_US.UTF-8
@@ -53,7 +35,7 @@ RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
 # ENV PATH $PATH:/root/.nuget/tools:/root/.dotnet/tools:/usr/bin/sonar-scanner-3.3.0.1492-linux/bin
 
 #---- go
-RUN apk add --no-cache go
+RUN apt install -y --no-install-recommends golang
 ENV GOLANG_VERSION 1.18.7
 ENV PATH $PATH:/usr/local/go/bin
 ENV PATH $PATH:/usr/local/
@@ -91,7 +73,7 @@ RUN chmod +x /usr/bin/usejava && /usr/bin/usejava java-${JAVA_VERSIOIN}-openjdk
 #---- nodejs
 ENV NODE_VERSION 16.14.2-r0
 
-RUN ARCH= && uArch="$(uname -m)" && apk add --no-cache gpg gnupg-dirmngr gpg-agent \
+RUN ARCH= && uArch="$(uname -m)" && apt install -y --no-install-recommends gpg gpg-agent gnupg2 \
   && case "${uArch##*-}" in \
     x86_64) ARCH='x64';; \
     aarch64) ARCH='arm64';; \
@@ -112,22 +94,21 @@ RUN ARCH= && uArch="$(uname -m)" && apk add --no-cache gpg gnupg-dirmngr gpg-age
     A48C2BEE680E841632CD4E44F07496B3EB3C1762 \
     B9E2F5981AA6E0CD28160D9FF13993A75599653C \
   ; do \
-    gpg --batch --keyserver sks.srv.dumain.com --recv-keys "$key"; \
+    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key"; \
   done \
-  && apk add --no-cache nodejs \
-  && apk add --no-cache npm \
-  && apk add --no-cache gtk+2.0 \
-  && apk add --no-cache chromium-chromedriver chromium \
+  && apt install -y --no-install-recommends nodejs \
+  && apt install -y --no-install-recommends npm \
+  && apt install -y --no-install-recommends chromium-chromedriver chromium-browser \
   && npm i -g watch-cli vsce typescript --unsafe
 
 # Yarn
 ENV YARN_VERSION 1.22.17-r0
-RUN apk add --no-cache yarn && yarn config set cache-folder /root/.yarn
+RUN npm i -g yarn && yarn config set cache-folder /root/.yarn
 
 #---- python
 # python3
 ENV PYTHON_VERSION=3.7.11
-RUN apk add --no-cache bzip2-dev libffi-dev sqlite-libs && \
+RUN apt install -y --no-install-recommends libbz2-dev libzip-dev libffi-dev libsqlite-dev && \
   wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
   mkdir -p /usr/src && \
   tar xvzf Python-${PYTHON_VERSION}.tgz -C /usr/src/ --no-same-owner && \
