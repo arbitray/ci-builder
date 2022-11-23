@@ -10,6 +10,7 @@ RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
     chmod +x /usr/bin/yq
 
 # Set the locale(en_US.UTF-8)
+RUN apt install -y --no-install-recommends locales
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
