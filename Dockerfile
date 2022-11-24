@@ -1,16 +1,18 @@
 FROM ubuntu:22.10
 
+SHELL ["/bin/bash", "-c"]
+
 #---- base
 # utils
-RUN apt update && \
-  apt install -y --no-install-recommends \
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends \
     unzip bash which make wget zip bzip2 gcc g++ curl libcurl4-gnutls-dev autoconf libexpat1-dev openssl perl zip openjdk-8-jdk openjdk-11-jdk git jq
 
 RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && \
     chmod +x /usr/bin/yq
 
 # Set the locale(en_US.UTF-8)
-RUN apt install -y --no-install-recommends locales && locale-gen en_US.UTF-8
+RUN apt-get install -y --no-install-recommends locales && locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
@@ -36,7 +38,7 @@ RUN chmod +x ./hack/*.sh && ./hack/base_install_utils.sh
 # ENV PATH $PATH:/root/.nuget/tools:/root/.dotnet/tools:/usr/bin/sonar-scanner-3.3.0.1492-linux/bin
 
 #---- go
-RUN apt install -y --no-install-recommends golang
+RUN apt-get install -y --no-install-recommends golang
 ENV GOLANG_VERSION 1.18.7
 ENV PATH $PATH:/usr/local/go/bin
 ENV PATH $PATH:/usr/local/
@@ -72,9 +74,11 @@ COPY usejava /usr/bin/
 RUN chmod +x /usr/bin/usejava && /usr/bin/usejava java-${JAVA_VERSIOIN}-openjdk
 
 #---- nodejs
-ENV NODE_VERSION 16.14.2-r0
+ENV NODE_VERSION 16.14.0
+# Yarn
+ENV YARN_VERSION 1.22.17
 
-RUN ARCH= && uArch="$(uname -m)" && apt install -y --no-install-recommends gpg gpg-agent gnupg2 \
+RUN ARCH= && uArch="$(uname -m)" && apt-get install -y --no-install-recommends gpg gpg-agent gnupg2 \
   && case "${uArch##*-}" in \
     x86_64) ARCH='x64';; \
     aarch64) ARCH='arm64';; \
@@ -97,19 +101,17 @@ RUN ARCH= && uArch="$(uname -m)" && apt install -y --no-install-recommends gpg g
   ; do \
     gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key"; \
   done \
-  && apt install -y --no-install-recommends nodejs \
-  && apt install -y --no-install-recommends npm \
-  && apt install -y --no-install-recommends chromium-chromedriver chromium-browser \
-  && npm i -g watch-cli vsce typescript --unsafe
-
-# Yarn
-ENV YARN_VERSION 1.22.17-r0
-RUN npm i -g yarn && yarn config set cache-folder /root/.yarn
+  && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash \
+  && . /root/.nvm/nvm.sh \
+  && npm install -g npm@9.1.2 \
+  && apt-get install -y --no-install-recommends chromium-chromedriver chromium-browser \
+  && npm i -g watch-cli vsce typescript --unsafe yarn \
+  && yarn config set cache-folder /root/.yarn
 
 #---- python
 # python3
 ENV PYTHON_VERSION=3.7.11
-RUN apt install -y --no-install-recommends libbz2-dev libzip-dev libffi-dev libsqlite-dev && \
+RUN apt-get install -y --no-install-recommends libbz2-dev libzip-dev libffi-dev libsqlite-dev && \
   wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
   mkdir -p /usr/src && \
   tar xvzf Python-${PYTHON_VERSION}.tgz -C /usr/src/ --no-same-owner && \
