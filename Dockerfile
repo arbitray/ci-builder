@@ -111,7 +111,7 @@ RUN ARCH= && uArch="$(uname -m)" && apt-get install -y --no-install-recommends g
 #---- python
 # python3
 ENV PYTHON_VERSION=3.7.11
-RUN apt-get install -y --no-install-recommends libbz2-dev libzip-dev libffi-dev libsqlite-dev && \
+RUN apt-get install -y --no-install-recommends libssl-dev libbz2-dev libzip-dev libffi-dev libsqlite-dev && \
   wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
   mkdir -p /usr/src && \
   tar xvzf Python-${PYTHON_VERSION}.tgz -C /usr/src/ --no-same-owner && \
