@@ -54,7 +54,7 @@ RUN mkdir -p $GOPATH/bin && mkdir -p $GOPATH/src && mkdir -p $GOPATH/pkg
 # java
 ENV JAVA_VERSIOIN 1.8.0
 # maven
-ENV MAVEN_VERSION=3.8.6
+ENV MAVEN_VERSION=3.9.0
 RUN curl -f -L https://dlcdn.apache.org/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar -C /opt -xz
 ENV M2_HOME /opt/apache-maven-$MAVEN_VERSION
 ENV JAVA_HOME /usr/lib/jvm/java-${JAVA_VERSIOIN}-openjdk
