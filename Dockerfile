@@ -74,7 +74,7 @@ COPY usejava /usr/bin/
 RUN chmod +x /usr/bin/usejava && /usr/bin/usejava java-${JAVA_VERSIOIN}-openjdk
 
 #---- nodejs
-ENV NODE_VERSION 16.14.0
+ENV NODE_VERSION 16.17.0
 # Yarn
 ENV YARN_VERSION 1.22.17
 
