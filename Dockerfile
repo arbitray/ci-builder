@@ -108,6 +108,10 @@ RUN ARCH= && uArch="$(uname -m)" && apt-get install -y --no-install-recommends g
   && npm i -g watch-cli vsce typescript --unsafe yarn \
   && yarn config set cache-folder /root/.yarn
 
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash && \
+  . ~/.nvm/nvm.sh && \
+  nvm install 16.17.0
+
 #---- python
 # python3
 ENV PYTHON_VERSION=3.7.11
